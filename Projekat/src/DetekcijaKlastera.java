@@ -1,3 +1,4 @@
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -9,15 +10,17 @@ import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.UndirectedSparseGraph;
 
 
-public class DetekcijaKlastera{//<Node, Link> {
-	private UndirectedSparseGraph<Node, Link> inputGraph;
-	public List<UndirectedSparseGraph<Node, Link>> listOfClusters = new ArrayList<UndirectedSparseGraph<Node, Link>>(); //javno samo za testiranje
+public class DetekcijaKlastera<N, L>{
+	private EdgeTransformer<N> tr;
+	private UndirectedSparseGraph<N, L> inputGraph;
+	public List<UndirectedSparseGraph<N, L>> listOfClusters = new ArrayList<UndirectedSparseGraph<N, L>>(); //javno samo za testiranje
 	private boolean isClusterable;
-	private Set<Link> edgesToRemove = new HashSet<Link>();
+	private Set<L> edgesToRemove = new HashSet<L>();
 	
-	private HashSet<Node> visited = new HashSet<Node>();
+	private HashSet<N> visited = new HashSet<N>();
 	
-	public DetekcijaKlastera(UndirectedSparseGraph<Node, Link> graph) {
+	public DetekcijaKlastera(UndirectedSparseGraph<N, L> graph, EdgeTransformer<N> transformer) {
+		this.tr = transformer;
 		if (graph == null) {
 			throw new IllegalArgumentException("Pointer to graph is null");
 		}
@@ -41,28 +44,26 @@ public class DetekcijaKlastera{//<Node, Link> {
 	
 	private void getComponents() {
 		boolean flag;
-		Iterator<Node> it = inputGraph.getVertices().iterator();
-		while (it.hasNext()) {
-			Node currentNode = it.next();
+		for (N currentNode : inputGraph.getVertices()) {
 			if (!visited.contains(currentNode)) {
 				identifyComponentBFS(currentNode);
 			}
 		}
 	}
 
-	private void identifyComponentBFS(Node startNode) {
-		LinkedList<Node> queue = new LinkedList<Node>();
+	private void identifyComponentBFS(N startNode) {
+		LinkedList<N> queue = new LinkedList<N>();
 		queue.add(startNode);
-		UndirectedSparseGraph<Node, Link> newComponent = new UndirectedSparseGraph<Node, Link>();
+		UndirectedSparseGraph<N, L> newComponent = new UndirectedSparseGraph<N, L>();
 		newComponent.addVertex(startNode);
 		
 		while(!queue.isEmpty()) {
-			Node current = queue.removeFirst();
+			N current = queue.removeFirst();
 			//Iterator<V> it = inputGraph.getNeighbors(current).iterator();
-			for (Node neighbor : inputGraph.getNeighbors(current)) { 
+			for (N neighbor : inputGraph.getNeighbors(current)) { 
 				if (!visited.contains(neighbor)) {
-					Link link = inputGraph.findEdge(current, neighbor);
-					if (link.getWeight() > 0) {
+					L link = inputGraph.findEdge(current, neighbor);
+					if (positiveConnected(current, neighbor)) {
 						visited.add(neighbor);
 						queue.addLast(neighbor);
 						newComponent.addVertex(neighbor);
@@ -81,12 +82,12 @@ public class DetekcijaKlastera{//<Node, Link> {
 	private boolean checkIsClusterable() {
 		// Go trough all "clasters" and check are any node connected with (-) in original graph
 		
-		for (UndirectedSparseGraph<Node, Link> g : listOfClusters){
-			for (Node node : g.getVertices()) {
-				for (Node neighbour : inputGraph.getNeighbors(node)) {
+		for (UndirectedSparseGraph<N, L> g : listOfClusters){
+			for (N node : g.getVertices()) {
+				for (N neighbour : inputGraph.getNeighbors(node)) {
 					if (g.findEdge(neighbour, node) == null && g.getVertices().contains(neighbour)){// containsVertex(neighbour)) {
-						Link link = inputGraph.findEdge(neighbour, node);
-						if (link.getWeight() < 0 ) {
+						//L link = inputGraph.findEdge(neighbour, node);
+						if (!positiveConnected(neighbour, node) ) {
 							return false;
 						}
 					}
@@ -96,15 +97,15 @@ public class DetekcijaKlastera{//<Node, Link> {
 		return true;
 	}
 	
-	public Set<Link> graneZaUklanjanje() {
+	public Set<L> graneZaUklanjanje() {
 		//vraca prazan set ako je graf klasterabilan
 		if (!isClusterable) {
-			for (UndirectedSparseGraph<Node, Link> g : listOfClusters){
-				for (Node node : g.getVertices()) {
-					for (Node neighbour : inputGraph.getNeighbors(node)) {
+			for (UndirectedSparseGraph<N, L> g : listOfClusters){
+				for (N node : g.getVertices()) {
+					for (N neighbour : inputGraph.getNeighbors(node)) {
 						if (g.findEdge(neighbour, node) == null && g.getVertices().contains(neighbour)){
-							Link link = inputGraph.findEdge(neighbour, node); 
-							if (g.containsVertex(neighbour) && link.getWeight() < 0) {
+							L link = inputGraph.findEdge(neighbour, node); 
+							if (g.containsVertex(neighbour) && !positiveConnected(neighbour, node)) {
 								edgesToRemove.add(link);
 							}
 						}
@@ -123,6 +124,9 @@ public class DetekcijaKlastera{//<Node, Link> {
 	}
 	
 	
-	
+	private boolean positiveConnected(N x, N y) {
+		return tr.transform(x, y) > 0;
+		
+	}
 
 }
