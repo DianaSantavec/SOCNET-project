@@ -1,0 +1,8 @@
+data/
+.metadata
+Projekat/bin
+Projekat/lib
+Projekat/.settings
+Projekat/.metadata
+Projekat/.project
+Projekat/.classpath
