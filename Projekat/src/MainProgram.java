@@ -14,10 +14,10 @@ public class MainProgram {
 
 	public static void main(String[] args) {
 		
-		String filename = "soc-sign-Slashdot090216.txt";//args[1];
+		String filename = "soc-sign-Slashdot081106.txt";//args[1]; //soc-sign-Slashdot081106.txt
 		Scanner scanner;
 		try {
-			scanner = new Scanner (new File ("/home/dianas/Faks/SOCNET/Projekat/data/" + filename));
+			scanner = new Scanner (new File ("D:\\Faks\\SOCNET\\SOCNET-project\\data\\" + filename));
 		}
 		catch(Exception e){
 			System.out.println("Fajl ne postoji: " + filename);
@@ -32,6 +32,7 @@ public class MainProgram {
 			int x = scanner.nextInt();
 			int y = scanner.nextInt();
 			int w = scanner.nextInt();
+			
 			
 			if (!nodes.contains(x)) {
 				nodes.add(x);
@@ -59,25 +60,19 @@ public class MainProgram {
 			
 		}
 		);
-		
-		Collection<UndirectedSparseGraph<Integer, Pair<Integer>>> koalicije; 
-		
+			
 		String outputFileName = "output_" + filename; 
 		try {
 			FileWriter fw = new FileWriter("data/" + outputFileName);
-			fw.write("Grane za uklanjanje:" + detekcijaKlastera.graneZaUklanjanje() + "/n");
+			fw.write("Da li je klasterabilan: " + detekcijaKlastera.checkClusterability() + "\n");
+			fw.write("Grane za uklanjanje:" + detekcijaKlastera.graneZaUklanjanje() + "\n");
 			fw.write("Broj grana za uklanjanje: " + detekcijaKlastera.brojGranaZaUklanjanje() + "\n");
 			fw.write("Svi klateri: " + detekcijaKlastera.listOfClusters + "\n");
 			fw.close();
 		}
 		catch(IOException e){
 			System.out.println(e.getMessage());
-		}
-		
-		
-		
-		
-		
+		}	
 
 	}
 
