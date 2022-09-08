@@ -8,6 +8,5 @@ public class TransformerOneNegativeLink<N> implements EdgeTransformer<N> {
 		else {
 			return 1;
 		}
-		
 	}
 }

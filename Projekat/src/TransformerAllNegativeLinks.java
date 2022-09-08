@@ -4,5 +4,4 @@ public class TransformerAllNegativeLinks<N> implements EdgeTransformer<N> {
 	public int transform(N x, N y) {
 		return -1;
 	}
-	
 }
