@@ -50,7 +50,7 @@ destroyClusters(graph_10000_015)
 writeToFile(graph_10000_015, "graph_10000_015_no_clusters")
 
 graph_10000_025 = generateWithClusters(10000, 0.25)
-writeToFile(graph_10000_025, "graph_10000_015")
+writeToFile(graph_10000_025, "graph_10000_025")
 destroyClusters(graph_10000_025)
 writeToFile(graph_10000_025, "graph_10000_025_no_clusters")
 
@@ -61,7 +61,7 @@ destroyClusters(graph_100000_015)
 writeToFile(graph_100000_015, "graph_100000_015_no_clusters")
 
 graph_100000_025 = generateWithClusters(100000, 0.25)
-writeToFile(graph_100000_025, "graph_100000_015")
+writeToFile(graph_100000_025, "graph_100000_025")
 destroyClusters(graph_100000_025)
 writeToFile(graph_100000_025, "graph_100000_025_no_clusters")
 
@@ -71,7 +71,7 @@ destroyClusters(graph_500000_015)
 writeToFile(graph_500000_015, "graph_500000_015_no_clusters")
 
 graph_500000_025 = generateWithClusters(500000, 0.25)
-writeToFile(graph_500000_025, "graph_500000_015")
+writeToFile(graph_500000_025, "graph_500000_025")
 destroyClusters(graph_500000_025)
 writeToFile(graph_500000_025, "graph_500000_025_no_clusters")
 
