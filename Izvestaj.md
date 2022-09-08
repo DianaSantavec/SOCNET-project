@@ -1,8 +1,10 @@
 # Provera klasterabilnosti neusmerenih označenih mreža
 
 ## Algoritam
-Implementiran je algoritam za proveru klasterabilnosti mreže. Provera se vrši pozivom metoda `checkIsClusterable()`[5]. Algoritam prvo generiše listu klastera, ignorišući negativne linkove. Nakon toga se proverava da li postoje dva čvora u klasteru koji su u originalnoj mreži povezani linkom sa negativnom težinom. Kada program naiđe na prvu pojavu takavog linka, vraća se vrednost `false`. 
+Implementiran je algoritam za proveru klasterabilnosti mreže. Provera se vrši pozivom metoda `checkIsClusterable()`[5]. Algoritam prvo generiše listu klastera, ignorišući negativne linkove. Nakon toga se proverava da li postoje dva čvora u klasteru koji su u originalnoj mreži povezani linkom sa negativnom težinom. Kada program naiđe na prvu pojavu takavog linka, vraća se vrednost `false`.
+
 Ukoliko se pozove metod `edgesToRemove()`, algoritam će izvršavati isti proces kao i za određivanje da li je mreža klasterabilna, sa razlikom da će svaki takav link biti upisana u `HashSet` i pretraga će obuhvatiti sve klastere. Pozivom metoda `numberOfEdgesToRemove()` moguće je dobiti i broj linkova koje treba ukloniti da bi mreža bila klasterabilna.
+
 Metod `getListOfClusters` omogućava dobijanje liste grafova klastera (listu `UndirectedSparseGraph` objekata). Pored liste klastera, moguće je dobiti i listu koalicija, kao i listu klastera koji nisu koalicije. Ovi podaci su dobijeni prilikom pretrage da li postoje linkovi negativne težine u klasteru.
 Dostupan je i metod `getClusterNetwork()` koji vraća graf takav da čvorovi predstavljaju klastere, a linkovi negativne linkove između klastera, ako takve postoje u originalnom grafu.
 
@@ -18,7 +20,8 @@ Prvi korak u testiranju algoritma je bio pisanjem junit testova. Generisan je gr
 _Slika 1. Ručno generisan graf_
 
 ## Testiranje na random mrežama
-Za generisanje random grafa je korišćen Erdős–Rényi model implementiran u _networx_ biblioteci u programskom jeziku Python. Nakon što je generisana random mreža, svakom linku je dodeljena težina -1 ili 1 da bi se dobila označena mreža. Dodela pozitivne ili negativne vrednosti se radila tako što se proveravala deljivost broja čvora sa brojem 5. Ukoliko su oba čvora deljiva sa brojem 5, postojala je mogućnost da budu povezani. Generisani su grafovi sa 1000, 100000 i 500000 čvorova sa mogućnošću povezivanja dva čvora 0.15 i 0.25.
+Za generisanje random grafa je korišćen Erdős–Rényi model implementiran u _networx_ biblioteci u programskom jeziku Python. Nakon što je generisana random mreža, svakom linku je dodeljena težina -1 ili 1 da bi se dobila označena mreža. Dodela pozitivne ili negativne vrednosti se radila tako što se proveravala deljivost broja čvora sa brojem 5. Ukoliko su oba čvora deljiva sa brojem 5, postojala je mogućnost da budu povezani. Generisani su grafovi sa 10000 i 100000 čvorova sa mogućnošću povezivanja dva čvora 0.15.
+
 Nakon testiranja, nad generisanim mrežama su uklonjeni određeni pozitivni linkovi da bi se dobila mreža koja nije klasterabilna. Uklanjanje linkova je vršeno na sledeći način: ako su čvor A i čvor B susedni i povezani linkom sa pozitivnom težinom, proverava se da li postoji čvor C koji je sused sa oba čvora i povezan je sa oba linkom sa pozitivnom težinom. Ukoliko postoje takva tri čvora, menja se težina linka između čvorova A i B, tako da postaje negativna.
 
 ## Testiranje nad realnim mrežama
